@@ -1,0 +1,83 @@
+2.1 Algorithm design
+
+Dynamic partition allocation is based on the actual needs of the process, the dynamic allocation of memory space.In the process of variable partition allocation, the data structure, partition allocation algorithm, partition allocation and memory collection are involved.Dynamic partition allocation is based on the actual needs of the process, the dynamic allocation of memory space.When implementing variable partition allocation, partition allocation is involved.
+Data structures in partition allocation contain :(1) data structures that describe free blocks.(2) description of memory blocks.
+Accordingly, we will design different memory allocation algorithms according to different performance requirements：
+
+First Fit (FF) : look up a free partition table from the First item in the table, separating the First idle items that meet the requirements from the allocated jobs. The purpose of this approach is to reduce lookup time.To accommodate this algorithm, the free partitions in the free partition table (free partition chain) are sorted by address from lowest to highest.The algorithm gives priority to the use of the low address part of the free area, in the low address space to create a lot of small free area, in the high address space to retain a large free area.
+
+Best Fit (BF) : find the smallest free partition that meets the requirements of the operation from the total free area, which can keep the fragment as small as possible.In order to adapt to this algorithm, the free partition in the free partition table (free partition chain) should be sorted from small to large, starting from the head of the table to find the first free partition allocation that meets the requirements.The algorithm retains large free areas but creates many small free areas.
+
+Worst Fit (WF) : find out the largest free partition that can meet the requirements of the job from all free areas, so that the node size in the linked list tends to be even. It is suitable for the system with a narrow range of requested memory size.In order to adapt to this algorithm, the free partition in the free partition table (free partition chain) is sorted by size from large to small, and the first free partition allocation that meets the requirements is found from the table head.The algorithm retains small free space and minimizes the generation of small fragments.
+Each of these approaches has its own advantages and disadvantages, which we describe in detail in the next section。
+
+2.2 Pros and cons of three algorithms
+
+The First Fit algorithm tends to use the free partition in the low address part of memory, and the free partition in the high address part is rarely utilized, thus preserving the large free partition in the high address part.This obviously creates the conditions for large jobs that arrive later to allocate large memory space.The disadvantage is that the low-address section is constantly partitioned, leaving a lot of hard-to-use, very small free space, and each lookup starts with the low-address section, which undoubtedly increases the overhead of the lookup.
+
+In order to speed up the search, the Best Fit algorithm needs to sort all the free areas according to their size and form a blank chain in increasing order.In this way, the first free area found each time to meet the demand must be optimal.In isolation, the algorithm may seem optimal, but it is not.Because the space left after each allocation must be minimal, the disadvantage is that there will be a lot of small free space left in memory that is hard to use.There is also the overhead of having to reorder each assignment.
+
+The Worst Fit algorithm and the Best Fit algorithm are in the opposite order. The queue pointer of the best 
+fit algorithm always points to the largest free space, and when allocation is made, the queue pointer always starts from the largest free space.The algorithm overcomes the deficiency of many small fragments left by the optimal adaptive algorithm, but the disadvantage is that the possibility of retaining large free space is reduced, and the recovery of free space is as complex as the optimal adaptive algorithm.
+
+The specific characteristics of the three algorithms are shown in the table below：
+
+ 
+Algorithm Name	Data structure	Props	Cons
+FF(First Fit)	The free areas are arranged in order of address from low to high	(1)	Simple; 
+(2)	Fast distribution
+(3)The tendency to use free partitions in the low-address portion of memory creates the conditions for later large jobs to allocate large memory space	(1)Leaving a lot of hard to use, very small free space
+(2)High time cost
+
+BF(Best Fit)	The free areas are arranged by size from small to large	(1)Each partition of space is optimal
+(2)Fast search speed	(1) There will be many small idle areas in the memory that are difficult to use
+(2) Must be reordered after each assignment
+WF(Worst Fit)	The free areas are arranged by size from large to small	(1) Overcome the deficiency of many small fragments left by the optimal adaptive algorithm	(1) The possibility of retaining a large free area is reduced
+(2) Idle recovery is as complex as the optimal adaptive algorithm
+ 
+
+
+2.3 Performance
+Next, three algorithms will be compared in terms of cost, resources and time through specific experiments:
+Firstly, First Fit algorithm,.the Cost, Resource utilisation, Time (waiting Time and execution Time and/or turnaround Time) of its five experiments are shown in the following table:
+
+ 
+ID	Cost($)	RI(%)	Time
+			WT	ET	TT	Total
+1	0.44	42.93	8	182	191	381
+2	1.62	47.33	11	208	220	439
+3	18.48	42.49	10	434	445	889
+4	1503.24	75.79	6	18633	18640	37279
+5	994.40	57.53	0	1416	1417	2833
+(RI: Resource utilization, WT:Waiting Time,ET:Execution Time,TT:Turnaround Time, the same below)
+
+ 
+Secondly, Best Fit algorithm,.The Cost, Resource utilisation, Time (waiting Time and execution Time and/or turnaround Time) of its five experiments are shown in the following table:
+ 
+ID	Cost($)	RI(%)	Time
+			WT	ET	TT	Total
+1						
+2						
+3						
+4						
+5						
+ 
+At last, Worst Fit algorithm,.The Cost, Resource utilisation, Time (waiting Time and execution Time and/or turnaround Time) of its five experiments are shown in the following table:
+ 
+ID	Cost($)	RI(%)	Time
+			WT	ET	TT	Total
+1						
+2						
+3						
+4						
+5						
+ 
+The comparison of the three algorithms is shown below:
+ 
+Algorithm Name	Cost($)	RI(%)	Time(Total)
+	1	2	3	4	5	1	2	3	4	5	1	2	3	4	5
+FF(First Fit)															
+BF(Best Fit)															
+WF(Worst Fit)															
+ 
+From the perspective of Cost, XX algorithm (estimated to be the best fit algorithm) is the lowest Cost, while XX algorithm (Worst Fit) is the highest.From the perspective of Resource utilisation, xx algorithm (Worst Fit)is the Worst and xx algorithm(Best Fit) is the Best.From the perspective of time cost, xx algorithm (First Fit) is the fastest.
